@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2034
 
-iso_name="HoloISO_4.1_OfflineInstaller"
+iso_name="HoloISO_5.0_OfflineInstaller"
 iso_label="HOLO_$(date +%Y%m)"
-iso_publisher="theVakhovske <https://github.com/theVakhovskeIsTaken>"
+iso_publisher="Fahr <https://github.com/Project-X-Mods>"
 iso_application="HoloISO Installer Image"
 iso_version="$(date +%Y%m%d_%H%M)"
 install_dir="arch"

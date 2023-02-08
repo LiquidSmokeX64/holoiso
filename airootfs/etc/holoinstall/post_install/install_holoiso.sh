@@ -281,6 +281,101 @@ base_os_install() {
     arch-chroot ${HOLO_INSTALL_DIR} pacman -Rdd --noconfirm mkinitcpio-archiso
 	arch-chroot ${HOLO_INSTALL_DIR} mkinitcpio -P
     arch-chroot ${HOLO_INSTALL_DIR} pacman -U --noconfirm $(find /etc/holoinstall/post_install/pkgs | grep pkg.tar.zst)
+    arch-chroot ${HOLO_INSTALL_DIR} pacman --overwrite="*" --noconfirm -S amd-ucode system-config-printer apparmor archinstall mlocate arch-install-scripts b43-fwcutter base base-devel bind brltty broadcom-wl btrfs-progs clonezilla cloud-init cryptsetup darkhttpd ddrescue dhclient dhcpcd diffutils dmidecode dmraid dnsmasq dosfstools e2fsprogs edk2-shell efibootmgr efitools exfatprogs f2fs-tools fatresize fsarchiver gpm gptfdisk grml-zsh-config grub hdparm hyperv intel-ucode iwd jfsutils kitty-terminfo libfido2 libusb-compat linux-atm linux-firmware linux-firmware-marvell man-db man-pages mkinitcpio mkinitcpio-archiso mkinitcpio-nfs-utils modemmanager mokutil mtools nano net-tools networkmanager nfs-utils nmap ntfs-3g nvme-cli openconnect open-iscsi openssh open-vm-tools openvpn partclone pcsclite ppp pptpclient qemu-guest-agent refind reflector reiserfsprogs rp-pppoe rsync rxvt-unicode-terminfo sbctl sbsigntools screen sdparm sg3_utils smartmontools sof-firmware squashfs-tools sudo systemd-resolvconf tcpdump terminus-font testdisk texinfo tmux tpm2-tss udftools usb_modeswitch usbmuxd usbutils vim vpnc wireless-regdb wireless_tools wpa_supplicant xfsprogs xl2tpd zsh
+	arch-chroot ${HOLO_INSTALL_DIR} pacman --overwrite="*" --noconfirm -S sddm-kcm boost-libs gtk-update-icon-cache hwinfo kconfig kcoreaddons ki18n kiconthemes kio kpmcore libpwquality polkit-qt5 qt5-svg qt5-xmlpatterns solid squashfs-tools yaml-cpp boost git qt5-tools qt5-translations python-pyqt5 polkit libsecret gtk3 wireplumber pipewire-pulse pipewire pipewire-alsa pipewire-jack appstream-qt kde-applications-meta kdevelop-python kgamma5 knewstuff kscreen kuserfeedback kvantum plasma-framework plasma-meta plasma-wayland-protocols plasma-wayland-session ark colord-kde gnome-color-manager gnome-keyring gnome-menus gtk4 xdg-desktop-portal-kde arc-gtk-theme dmenu adapta-gtk-theme arc-icon-theme thunderbird egl-wayland pavucontrol-qt ruby perl lua firefox rhythmbox alsa-lib alsa-plugins amd-ucode archiso archivetools aria2 base-devel bash-completion bash-language-server blueman bluez-libs cabextract chrony clang cmake colord cronie cups dbus dbus-python dconf directx-headers dkms efibootmgr elfutils exfatprogs expat extra-cmake-modules firewalld flatpak gettext giflib gimp git glib2 glibc glslang gnu-free-fonts gnutls go gst-libav gst-plugin-pipewire gst-plugins-bad gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-ugly gstreamer gtk-engine-murrine hicolor-icon-theme innoextract jdk-openjdk jre-openjdk jre-openjdk-headless kcmutils lib32-alsa-lib lib32-alsa-plugins lib32-giflib lib32-gnutls lib32-gst-plugins-base-libs lib32-libjpeg-turbo lib32-libldap lib32-libpng lib32-libpulse lib32-libva lib32-libva-mesa-driver lib32-libxcomposite lib32-libxinerama lib32-libxslt lib32-mesa-vdpau lib32-mpg123 lib32-ncurses lib32-openal lib32-opencl-icd-loader lib32-opencl-mesa lib32-pipewire lib32-pipewire-jack lib32-v4l-utils lib32-vkd3d lib32-vulkan-icd-loader lib32-vulkan-mesa-layers lib32-vulkan-radeon lib32-vulkan-radeon libclc libdrm libelf libglvnd libjpeg-turbo libldap libnotify libomxil-bellagio libpng libpulse libreoffice-fresh libunwind libva libva-mesa-driver libva-utils libva-vdpau-driver libvdpau libx11 libxcomposite libxdamage libxinerama libxml2 libxrandr libxshmfence libxslt libxxf86vm linux-headers llvm llvm-libs lm_sensors lutris make mesa mesa-utils mesa-vdpau meson mkinitcpio mpg123 mtools nano ncurses neofetch nftables nm-connection-editor noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra ntfsprogs ntp nullmailer openal opencl-icd-loader opencl-mesa opengl-man-pages openjdk-doc openjdk-src power-profiles-daemon python-gobject python-mako python-pyqt6 qt6 qt5 qt6-imageformats qt6-multimedia-ffmpeg qt6-wayland shellcheck shotwell sudo systemd terminus-font tesseract-data-eng ttf-liberation udev ufw unrar unzip v4l-utils valgrind virtualbox virtualbox-guest-utils virtualbox-host-modules-arch vkd3d vulkan-icd-loader vulkan-mesa-layers vulkan-radeon w3m wine wine-gecko wine-mono winetricks wireplumber xdg-utils xf86-video-amdgpu xorg xorg-apps xorgproto xorg-server xreader yay zenity zstd xfconf vlc
+
+	cp /opt/config ${HOLO_INSTALL_DIR}/etc/sway/
+	java1="$(arch-chroot ${HOLO_INSTALL_DIR} sudo -Su "$HOLOUSER" archlinux-java get 2>/dev/null)"
+	if [[ -z "$java1" ]] ; then
+		echo "I'm broken :("
+	fi
+	arch-chroot ${HOLO_INSTALL_DIR} archlinux-java set "$java1"
+	printf "%b2\n" "$*" | arch-chroot ${HOLO_INSTALL_DIR} sudo -Su "$HOLOUSER" yay --noconfirm --nodiffmenu --noremovemake --answerclean a  --answerdiff n --answeredit y --answerupgrade y vmware-workstation
+	printf "%b1\n[Unit]\nDescription=VMware daemon\nRequires=vmware-usbarbitrator.service\nBefore=vmware-usbarbitrator.service\nAfter=network.target\n[Service]\nExecStart=/etc/init.d/vmware start\nExecStop=/etc/init.d/vmware stop\nPIDFile=/var/lock/subsys/vmware\nRemainAfterExit=yes\n[Install]\nWantedBy=multi-user.target\n" "$*" >> ${HOLO_INSTALL_DIR}/etc/systemd/system/vmware.service
+
+	printf "%b1\n[Unit]\nDescription=VMware USB Arbitrator\nRequires=vmware.service\n[Service]\nExecStart=/usr/bin/vmware-usbarbitrator\nExecStop=/usr/bin/vmware-usbarbitrator --kill\nRemainAfterExit=yes\n[Install]\nWantedBy=multi-user.target\n" "$*" >> ${HOLO_INSTALL_DIR}/etc/systemd/system/vmware-usbarbitrator.service
+
+	printf "%b\n[Unit]\nDescription=VMware Networks\nWants=vmware-networks-configuration.service\nAfter=vmware-networks-configuration.service\n[Service]\nType=forking\nExecStartPre=-/sbin/modprobe vmnet\nExecStart=/usr/bin/vmware-networks --start\nExecStop=/usr/bin/vmware-networks --stop\n[Install]\nWantedBy=multi-user.target\n" "$*" >> ${HOLO_INSTALL_DIR}/etc/systemd/system/vmware-networks-server.service
+
+	arch-chroot ${HOLO_INSTALL_DIR} systemctl enable vmware-networks-server.service
+	arch-chroot ${HOLO_INSTALL_DIR} systemctl enable vmware-usbarbitrator.service
+	arch-chroot ${HOLO_INSTALL_DIR} systemctl enable vmware.service
+	printf "%b3\n" "$*" | arch-chroot ${HOLO_INSTALL_DIR} sudo -Su "$HOLOUSER" yay --noconfirm --nodiffmenu --noremovemake --answerclean a  --answerdiff n --answeredit y --answerupgrade y snapd
+	printf "%b2\n" "$*" | arch-chroot ${HOLO_INSTALL_DIR} sudo -Su "$HOLOUSER" yay --noconfirm --nodiffmenu --noremovemake --answerclean a  --answerdiff n --answeredit y --answerupgrade y snapd-glib
+	arch-chroot ${HOLO_INSTALL_DIR} systemctl enable snapd.apparmor
+	arch-chroot ${HOLO_INSTALL_DIR} systemctl enable snapd
+	while [ "$gpucheck" != "1" ] && [ "$gpucheck" != "2" ] && [ "$gpucheck" != "3" ]; do
+	printf "%b\nDo you have an amd or nvidia graphics card? -- Intel ARC not yet supported.\n" "$*"
+	printf "%b\n1 - AMD\n" "$*"
+	printf "%b\n2 - Nvidia\n" "$*"
+	printf "%b\n3 - Virtual GPU (VMware etc.)\n" "$*"
+
+	read -r gpucheck
+	case $gpucheck in
+	1) printf "%b\nPerfect\n" "$*" ;;
+	2) printf "%b\nA good choice.\n" "$*" ;;
+	3) printf "%b\nA good choice.\n" "$*" ;;
+	*) printf "%b\nUnrecognized option, please try again: $HOLOUSER\n" "$*" ;;
+	esac
+	done
+	if [ "$gpucheck" = "1" ]; then
+	gpu0="amd"
+	elif [ "$gpucheck" = "2" ]; then
+	gpu0="nvidia"
+	elif [ "$gpucheck" = "3" ]; then
+	gpu0="vm"
+	fi
+
+	if [ $gpu0 = "nvidia" ]; then
+	printf "%b\nNvidia selected.\nInstalling GPU Drivers first.\n" "$*"
+	arch-chroot ${HOLO_INSTALL_DIR} pacman -Sy --noconfirm nvidia-open opencl-nvidia nvidia-utils nvidia-settings
+	#printf "%b1\n" "$*" | arch-chroot ${HOLO_INSTALL_DIR} sudo -Su "$HOLOUSER" yay --noconfirm --nodiffmenu --noremovemake --answerclean n  --answerdiff n --answeredit y --answerupgrade y sway-nvidia
+	#printf "%b\noptions root=LABEL=$drivename0 rw nvidia-drm.modeset=1 lsm=landlock,lockdown,yama,integrity,apparmor,bpf\n" "$*" >> /mnt/boot/loader/entries/arch.conf
+	elif [ $gpu0 = "amd" ]; then
+	printf "%b\nAMD selected.\nInstalling amdgpu-fan and corectrl" "$*"
+	#printf "%b\noptions root=LABEL=$drivename0 rw lsm=landlock,lockdown,yama,integrity,apparmor,bpf\n" "$*" >> /mnt/boot/loader/entries/arch.conf
+	printf "%b1\n" "$*" | arch-chroot ${HOLO_INSTALL_DIR} sudo -Su "$HOLOUSER" yay --noconfirm --nodiffmenu --noremovemake --answerclean a  --answerdiff n --answeredit y --answerupgrade y amdgpu-fan
+	arch-chroot ${HOLO_INSTALL_DIR} pacman -Sy --noconfirm corectrl
+	printf "%b3\n" "$*" | arch-chroot ${HOLO_INSTALL_DIR} sudo -Su "$HOLOUSER" yay --noconfirm --nodiffmenu --noremovemake --answerclean a  --answerdiff n --answeredit y --answerupgrade y pamac-aur
+	printf "%b1\n" "$*" | arch-chroot ${HOLO_INSTALL_DIR} sudo -Su "$HOLOUSER" yay --noconfirm --nodiffmenu --noremovemake --answerclean a  --answerdiff n --answeredit y --answerupgrade y ast-firmware
+	printf "%b1\n" "$*" | arch-chroot ${HOLO_INSTALL_DIR} sudo -Su "$HOLOUSER" yay --noconfirm --nodiffmenu --noremovemake --answerclean a  --answerdiff n --answeredit y --answerupgrade y ckbcomp
+	printf "%b1\n" "$*" | arch-chroot ${HOLO_INSTALL_DIR} sudo -Su "$HOLOUSER" yay --noconfirm --nodiffmenu --noremovemake --answerclean a  --answerdiff n --answeredit y --answerupgrade y mkinitcpio-openswap
+	printf "%b1\n" "$*" | arch-chroot ${HOLO_INSTALL_DIR} sudo -Su "$HOLOUSER" yay --noconfirm --nodiffmenu --noremovemake --answerclean a  --answerdiff n --answeredit y --answerupgrade y mkinitcpio-firmware
+	printf "%b1\n" "$*" | arch-chroot ${HOLO_INSTALL_DIR} sudo -Su "$HOLOUSER" yay --noconfirm --nodiffmenu --noremovemake --answerclean a  --answerdiff n --answeredit y --answerupgrade y text-engine-git
+	printf "%b1\n" "$*" | arch-chroot ${HOLO_INSTALL_DIR} sudo -Su "$HOLOUSER" yay --noconfirm --nodiffmenu --noremovemake --answerclean a  --answerdiff n --answeredit y --answerupgrade y protontricks
+	printf "%b1\n" "$*" | arch-chroot ${HOLO_INSTALL_DIR} sudo -Su "$HOLOUSER" yay --noconfirm --nodiffmenu --noremovemake --answerclean a  --answerdiff n --answeredit y --answerupgrade y game-devices-udev
+	#printf "%b2 7\n" "$*" | arch-chroot ${HOLO_INSTALL_DIR} sudo -Su "$HOLOUSER" yay --noconfirm --nodiffmenu --noremovemake --answerclean a  --answerdiff n --answeredit y --answerupgrade y mangohud
+	#printf "%b1\n" "$*" | arch-chroot ${HOLO_INSTALL_DIR} sudo -Su "$HOLOUSER" yay --noconfirm --nodiffmenu --noremovemake --answerclean a  --answerdiff n --answeredit y --answerupgrade y gamescope
+	printf "%b2\n" "$*" | arch-chroot ${HOLO_INSTALL_DIR} sudo -Su "$HOLOUSER" yay --noconfirm --nodiffmenu --noremovemake --answerclean a  --answerdiff n --answeredit y --answerupgrade y dxvk-bin
+	printf "%b1\n" "$*" | arch-chroot ${HOLO_INSTALL_DIR} sudo -Su "$HOLOUSER" yay --noconfirm --nodiffmenu --noremovemake --answerclean a  --answerdiff n --answeredit y --answerupgrade y ntfix
+	printf "%b1\n" "$*" | arch-chroot ${HOLO_INSTALL_DIR} sudo -Su "$HOLOUSER" yay --noconfirm --nodiffmenu --noremovemake --answerclean a  --answerdiff n --answeredit y --answerupgrade y heroic-games-launcher
+	printf "%b1\n" "$*" | arch-chroot ${HOLO_INSTALL_DIR} sudo -Su "$HOLOUSER" yay --noconfirm --nodiffmenu --noremovemake --answerclean a  --answerdiff n --answeredit y --answerupgrade y systemd-kcm
+	#printf "%b1\n" "$*" | arch-chroot ${HOLO_INSTALL_DIR} sudo -Su "$HOLOUSER" yay --noconfirm --nodiffmenu --noremovemake --answerclean n  --answerdiff n --answeredit y --answerupgrade y swaysettings-git
+	printf "%b2\n" "$*" | arch-chroot ${HOLO_INSTALL_DIR} sudo -Su "$HOLOUSER" yay --noconfirm --nodiffmenu --noremovemake --answerclean n  --answerdiff n --answeredit y --answerupgrade y github-desktop
+	arch-chroot ${HOLO_INSTALL_DIR} systemctl enable apparmor
+	arch-chroot ${HOLO_INSTALL_DIR} systemctl enable systemd-boot-update.service
+	arch-chroot ${HOLO_INSTALL_DIR} systemctl enable dhcpcd
+	arch-chroot ${HOLO_INSTALL_DIR} systemctl enable cronie
+	arch-chroot ${HOLO_INSTALL_DIR} systemctl enable chronyd
+	arch-chroot ${HOLO_INSTALL_DIR} systemctl enable NetworkManager
+	arch-chroot ${HOLO_INSTALL_DIR} systemctl enable firewalld
+	arch-chroot ${HOLO_INSTALL_DIR} systemctl enable cups
+	arch-chroot ${HOLO_INSTALL_DIR} systemctl enable sddm
+	arch-chroot ${HOLO_INSTALL_DIR} systemctl --global enable pipewire.service pipewire-pulse.service wireplumber.service
+	arch-chroot ${HOLO_INSTALL_DIR} pacman -Sy --noconfirm xdg-user-dirs
+	printf "%b1\n" "$*" | arch-chroot ${HOLO_INSTALL_DIR} sudo -Su "$HOLOUSER" yay --noconfirm --nodiffmenu --noremovemake --answerclean a  --answerdiff n --answeredit y --answerupgrade y xdg-environment
+	printf "%b1\n" "$*" | arch-chroot ${HOLO_INSTALL_DIR} sudo -Su "$HOLOUSER" yay --noconfirm --nodiffmenu --noremovemake --answerclean a  --answerdiff n --answeredit y --answerupgrade y xdg-autostart
+	mkdir -p ${HOLO_INSTALL_DIR}/usr/share/wallpapers/coffee/
+	#mkdir -p /mnt/usr/share/backgrounds/gnome/
+	cp /opt/backgrounds/coffee/* ${HOLO_INSTALL_DIR}/usr/share/wallpapers/coffee/
+	#cp /opt/backgrounds/coffee/* /mnt/usr/share/backgrounds/gnome/
+	#cp /opt/os-release ${HOLO_INSTALL_DIR}/etc/
+	#cp /opt/lsb-release ${HOLO_INSTALL_DIR}/etc/
+	cp -r /opt/* ${HOLO_INSTALL_DIR}/opt/
+	#cp /opt/sway.desktop ${HOLO_INSTALL_DIR}/usr/share/wayland-sessions/
+	cp /usr/local/bin/coffeebrewer ${HOLO_INSTALL_DIR}/usr/local/bin/
+	arch-chroot ${HOLO_INSTALL_DIR} chmod 755 /usr/local/bin/coffeebrewer
+	#arch-chroot ${HOLO_INSTALL_DIR} chmod 755 /usr/share/wayland-sessions/sway.desktop
 	arch-chroot ${HOLO_INSTALL_DIR} userdel -r liveuser
 	check_download $? "installing base package"
 	sleep 2

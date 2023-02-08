@@ -37,9 +37,10 @@ pacman -Rdd --noconfirm sddm linux syslinux
 pacman --overwrite="*" --noconfirm -S holoiso-main
 mv /etc/pacman.conf /etc/pacold
 cp /etc/holoinstall/post_install/pacman.conf /etc/pacman.conf
+cp /etc/holoinstall/post_install/beta_pacman.conf /etc/beta_pacman.conf
 pacman --overwrite="*" --noconfirm -S holoiso-updateclient wireplumber flatpak packagekit-qt5 rsync unzip sddm-wayland dkms steam-im-modules systemd-swap ttf-twemoji-default ttf-hack ttf-dejavu pkgconf pavucontrol partitionmanager gamemode lib32-gamemode cpupower bluez-plugins bluez-utils
 mv /etc/xdg/autostart/steam.desktop /etc/xdg/autostart/desktopshortcuts.desktop /etc/skel/Desktop/steamos-gamemode.desktop /etc/holoinstall/post_install_shortcuts
-pacman --noconfirm -S base-devel
+pacman --noconfirm -S base-devel yay go
 
 # Enable stuff
 systemctl enable sddm NetworkManager systemd-timesyncd cups bluetooth sshd
@@ -56,9 +57,13 @@ rm /etc/mkinitcpio.conf
 mv /etc/mkinitcpio.conf.pacnew /etc/mkinitcpio.conf 
 rm /etc/mkinitcpio.d/* # This removes shitty unasked presets so that this thing can't overwrite it next time
 cp /etc/holoinstall/post_install/mkinitcpio_presets/linux-neptune.preset /etc/mkinitcpio.d/ # Yes. I'm lazy to use mkinitcpio-install. Problems? *gigachad posture*
+cp /etc/holoinstall/post_install/pacman.conf /etc/pacman.conf
+cp /etc/holoinstall/post_install/beta_pacman.conf /etc/beta_pacman.conf
 
 # Remove this shit from post-build
 rm -rf /etc/holoinstall/pre_install
-rm /etc/pacman.conf
-mv /etc/pacold /etc/pacman.conf
+#rm /etc/pacman.conf
+mv /etc/pacold /etc/pacman.conf.old
+cp /etc/holoinstall/post_install/pacman.conf /etc/pacman.conf
+cp /etc/holoinstall/post_install/beta_pacman.conf /etc/beta_pacman.conf
 rm /home/.steamos/offload/var/cache/pacman/pkg/*
