@@ -19,6 +19,7 @@ Click [here](https://steamdeck.community/forums/holoiso.29/) to visit the origin
 > No, but it may as well be 99% of the way there. The code and packages, are straight from Valve, with zero possible edits, and the ISO is being built same rootfs bootstrap as all HoloISO installations run
 - I have an NVIDIA GPU
 > No. Not even questionable. If you have an NVIDIA GPU, You're on your own. Latest Valve updates for Steam client including normal and Jupiter bootstraps have broken gamepadui on NVIDIA GPUs, and if so, no support will be provided for you.
+
 Edit: As of 5.0, Merging with CoffeeLinux may have resolved this issue.
 
 
