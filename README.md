@@ -9,16 +9,17 @@ SteamOS 3 (Holo) archiso configuration.
 This project attempts to bring the Steam Deck's SteamOS Holo redistribution into a generic, installable format, and provide a close-to-official SteamOS experience.
 Main point of this project focuses in re-implementing proprietary (as in runs-only-on-deck) components that Steam client, OS itself, gamescope and user-created applications for Deck rely on and making me learn Linux in a fun and unique way.
 
-Click [here](https://t.me/HoloISO) to join **HoloISO** Telegram update channel;
+Click [here](https://t.me/HoloISO) to join the original authors **HoloISO** Telegram update channel;
 
-Click [here](https://steamdeck.community/forums/holoiso.29/) to visit **HoloISO** discussion on Steam Deck Community forums
+Click [here](https://steamdeck.community/forums/holoiso.29/) to visit the original authors **HoloISO** discussion on Steam Deck Community forums
 
 **Common Questions**
 
 - Is this official?
 > No, but it may as well be 99% of the way there. The code and packages, are straight from Valve, with zero possible edits, and the ISO is being built same rootfs bootstrap as all HoloISO installations run
-- I have an NVIDIA G-
+- I have an NVIDIA GPU
 > No. Not even questionable. If you have an NVIDIA GPU, You're on your own. Latest Valve updates for Steam client including normal and Jupiter bootstraps have broken gamepadui on NVIDIA GPUs, and if so, no support will be provided for you.
+Edit: As of 5.0, Merging with CoffeeLinux may have resolved this issue.
 
 
 **Working stuff:**
@@ -85,10 +86,10 @@ Building the ISO:
 -
 Trigger the build by executing:
 ```
-pacman -Sy archiso
-git clone https://github.com/bhaiest/holoiso/
-mv holoiso/mkarchiso-holoiso /usr/bin
-chmod +x /usr/bin/mkarchiso-holoiso
+sudo pacman -Sy archiso
+git clone https://github.com/liquidsmokex64/holoiso/
+sudo mv holoiso/mkarchiso-holoiso /usr/bin
+sudo chmod +x /usr/bin/mkarchiso-holoiso
 sudo mkarchiso-holoiso -v holoiso
 ```
 Once it ends, your ISO will be available in the `out` folder.
