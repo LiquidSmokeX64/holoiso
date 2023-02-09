@@ -15,7 +15,7 @@ chmod 755 /etc/skel/Desktop/install.desktop
 rm /home/${LIVEOSUSER}/steam.desktop
 
 # Add a liveOS user
-ROOTPASS="holoconfig"
+ROOTPASS="steamroot"
 LIVEOSUSER="liveuser"
 
 echo -e "${ROOTPASS}\n${ROOTPASS}" | passwd root
@@ -38,9 +38,11 @@ pacman --overwrite="*" --noconfirm -S holoiso-main
 mv /etc/pacman.conf /etc/pacold
 cp /etc/holoinstall/post_install/pacman.conf /etc/pacman.conf
 cp /etc/holoinstall/post_install/beta_pacman.conf /etc/beta_pacman.conf
+cp /etc/holoinstall/post_install/holoiso-branch /etc/holoiso-branch
+cp /etc/holoinstall/post_install/mirrorlist /etc/pacman.d/mirrorlist
 pacman --overwrite="*" --noconfirm -S holoiso-updateclient wireplumber flatpak packagekit-qt5 rsync unzip sddm-wayland dkms steam-im-modules systemd-swap ttf-twemoji-default ttf-hack ttf-dejavu pkgconf pavucontrol partitionmanager gamemode lib32-gamemode cpupower bluez-plugins bluez-utils
 mv /etc/xdg/autostart/steam.desktop /etc/xdg/autostart/desktopshortcuts.desktop /etc/skel/Desktop/steamos-gamemode.desktop /etc/holoinstall/post_install_shortcuts
-pacman --noconfirm -S base-devel yay go
+pacman --noconfirm -S base-devel yay power-profiles-daemon gnome-disk-utility
 
 # Enable stuff
 systemctl enable sddm NetworkManager systemd-timesyncd cups bluetooth sshd
@@ -66,4 +68,6 @@ rm -rf /etc/holoinstall/pre_install
 mv /etc/pacold /etc/pacman.conf.old
 cp /etc/holoinstall/post_install/pacman.conf /etc/pacman.conf
 cp /etc/holoinstall/post_install/beta_pacman.conf /etc/beta_pacman.conf
+cp /etc/holoinstall/post_install/holoiso-branch /etc/holoiso-branch
+cp /etc/holoinstall/post_install/mirrorlist /etc/pacman.d/mirrorlist
 rm /home/.steamos/offload/var/cache/pacman/pkg/*

@@ -1,7 +1,12 @@
 [![Build ISO](https://github.com/theVakhovskeIsTaken/holoiso/actions/workflows/build.yml/badge.svg)](https://github.com/theVakhovskeIsTaken/holoiso/actions/workflows/build.yml)
 
 ![image](https://user-images.githubusercontent.com/97450182/167457908-07be1a60-7e86-4bef-b7f0-6bd19efd8b24.png)
-# HoloISO
+# HoloISO Revived
+
+Because it seems the original Holoiso creator has abandoned it due to IRL issues.. And attempted to sabatoge the build process..
+I fixed it as best as I can, and am doing my best to move forward.
+Things seem to work so far.
+
 SteamOS 3 (Holo) archiso configuration.
 
 ***Yes, Gabe. SteamOS functions well on a toaster.***
@@ -9,18 +14,12 @@ SteamOS 3 (Holo) archiso configuration.
 This project attempts to bring the Steam Deck's SteamOS Holo redistribution into a generic, installable format, and provide a close-to-official SteamOS experience.
 Main point of this project focuses in re-implementing proprietary (as in runs-only-on-deck) components that Steam client, OS itself, gamescope and user-created applications for Deck rely on and making me learn Linux in a fun and unique way.
 
-Click [here](https://t.me/HoloISO) to join the original authors **HoloISO** Telegram update channel;
-
-Click [here](https://steamdeck.community/forums/holoiso.29/) to visit the original authors **HoloISO** discussion on Steam Deck Community forums
-
 **Common Questions**
 
 - Is this official?
 > No, but it may as well be 99% of the way there. The code and packages, are straight from Valve, with zero possible edits, and the ISO is being built same rootfs bootstrap as all HoloISO installations run
 - I have an NVIDIA GPU
 > No. Not even questionable. If you have an NVIDIA GPU, You're on your own. Latest Valve updates for Steam client including normal and Jupiter bootstraps have broken gamepadui on NVIDIA GPUs, and if so, no support will be provided for you.
-
-Edit: As of 5.0, Merging with CoffeeLinux may have resolved this issue.
 
 
 **Working stuff:**
@@ -54,13 +53,6 @@ Installation process:
 - UEFI-enabled device
 - Disabled secure boot
 
-**Installation:**
-- Flash the ISO from [releases](https://github.com/bhaiest/holoiso/releases/latest) or [actions](https://nightly.link/theVakhovskeIsTaken/holoiso/workflows/build/stable/holoiso) for NVIDIA GPUs using [BalenaEtcher](https://www.balena.io/etcher/), [Rufus](https://rufus.ie) with DD mode, or by typing `sudo dd if=SteamOS.iso of=/dev/sd(your flash drive) bs=4M status=progress oflag=sync`, or by simply throwing ISO into Ventoy drive
-- Boot into ISO
-- Click on "Install SteamOS on this device"
-- Follow on-screen instructions
-- Take your favourite hot beverage, and wait 'till it installs :3
-
 Upon booting, you'll be greeted with Steam Deck's OOBE screen, from where you'll connect to your network, and login to your Steam account, from there, you can exit to KDE Plasma seamlessly by choosing *Switch to desktop* in the power menu, [like so](https://www.youtube.com/watch?v=smfwna2iHho).
 
 Screenshots:
@@ -88,8 +80,8 @@ Building the ISO:
 Trigger the build by executing:
 ```
 sudo pacman -Sy archiso
-git clone https://github.com/liquidsmokex64/holoiso/
-sudo mv holoiso/mkarchiso-holoiso /usr/bin
+git clone https://github.com/liquidsmokex64/holoiso.git
+sudo cp holoiso/mkarchiso-holoiso /usr/bin
 sudo chmod +x /usr/bin/mkarchiso-holoiso
 sudo mkarchiso-holoiso -v holoiso
 ```

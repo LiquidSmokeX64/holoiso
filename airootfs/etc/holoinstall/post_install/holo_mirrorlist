@@ -1,0 +1,4 @@
+# HoloISO Mirrorlist
+# 1 - EU Server
+
+Server = http://holoiso.itsvixano.me/$repo/os/$arch
